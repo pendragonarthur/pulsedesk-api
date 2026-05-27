@@ -21,4 +21,6 @@ public class User
     [Required]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    public List<Ticket> Tickets { get; set; } = [];
+
 }
