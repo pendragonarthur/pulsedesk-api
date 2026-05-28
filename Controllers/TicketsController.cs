@@ -10,7 +10,7 @@ using System.Security.Claims;
 namespace PulseDeskAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/tickets")]
 public class TicketController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
@@ -20,6 +20,20 @@ public class TicketController : ControllerBase
     {
         _context = context;
 
+    }
+
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> GetTickets()
+    {
+        var tickets = await _context.Tickets.Select(x => new TicketResponseDto
+        {
+            Id = x.Id,
+            Title = x.Title,
+            Description = x.Description
+        }).ToListAsync();
+        return Ok(tickets);
     }
 
     [Authorize]
@@ -57,6 +71,7 @@ public class TicketController : ControllerBase
 
         return Ok(tickets);
     }
+
 
     [Authorize]
     [HttpGet("{id}")]
