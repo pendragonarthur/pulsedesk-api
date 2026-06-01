@@ -12,4 +12,15 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Ticket> Tickets { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Ticket>()
+            .Property(t => t.Status)
+            .HasConversion<string>();
+
+        modelBuilder.Entity<Ticket>()
+            .Property(t => t.Priority)
+            .HasConversion<string>();
+    }
 }

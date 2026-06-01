@@ -109,7 +109,7 @@ public class TicketController : ControllerBase
 
     [Authorize]
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateTicketById(int id, UpdateTicketDto dto)
+    public async Task<IActionResult> UpdateTicketById(int id, [FromBody] UpdateTicketDto dto)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         int parsedUserId = int.Parse(userId!);
@@ -122,6 +122,9 @@ public class TicketController : ControllerBase
         }
         ticket.Title = dto.Title;
         ticket.Description = dto.Description;
+        ticket.Priority = dto.Priority;
+        ticket.Status = dto.Status;
+        ticket.UpdatedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
 
         return Ok(ticket);
