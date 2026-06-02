@@ -31,7 +31,11 @@ public class TicketController : ControllerBase
         {
             Id = x.Id,
             Title = x.Title,
-            Description = x.Description
+            Description = x.Description,
+            Status = x.Status,
+            Priority = x.Priority,
+            CreatedAt = x.CreatedAt,
+            UpdatedAt = x.UpdatedAt
         }).ToListAsync();
         return Ok(tickets);
     }
@@ -53,6 +57,9 @@ public class TicketController : ControllerBase
             Title = dto.Title,
             Description = dto.Description,
             UserId = parsedUserId,
+
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
 
         _context.Tickets.Add(ticket);
@@ -93,10 +100,8 @@ public class TicketController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTicketById(int id)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        int parsedUserId = int.Parse(userId!);
 
-        var ticket = await _context.Tickets.Where(x => x.UserId == parsedUserId && x.Id == id).FirstOrDefaultAsync();
+        var ticket = await _context.Tickets.Where(x => x.Id == id).FirstOrDefaultAsync();
 
         if (ticket == null)
         {
@@ -111,15 +116,14 @@ public class TicketController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTicketById(int id, [FromBody] UpdateTicketDto dto)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        int parsedUserId = int.Parse(userId!);
 
-        var ticket = await _context.Tickets.Where(x => x.UserId == parsedUserId && x.Id == id).FirstOrDefaultAsync();
+        var ticket = await _context.Tickets.Where(x => x.Id == id).FirstOrDefaultAsync();
 
         if (ticket == null)
         {
             return NotFound("Ticket não encontrado");
         }
+
         ticket.Title = dto.Title;
         ticket.Description = dto.Description;
         ticket.Priority = dto.Priority;
