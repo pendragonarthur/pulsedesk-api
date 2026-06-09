@@ -27,7 +27,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://pulsedesk-web.vercel.app/").AllowAnyHeader().AllowAnyMethod();
+        policy.WithOrigins("http://localhost:3000", "https://pulsedesk-web.vercel.app").AllowAnyHeader().AllowAnyMethod();
     });
 });
 
